@@ -1,0 +1,105 @@
+public void actionPerformed(ActionEvent ae ) {
+		if(ae.getSource() == back) {
+			setVisible(false);
+			new Transaction(pinnumber).setVisible(true);
+		}else {
+			/* we are getting amount here on the basis of user selection 
+			 *first of all we are doing type casting <code>((JButton) ae.getSource())</code>
+			 *then getting text for <code>getSource</code>
+			 *There are multiple buttons Rs 100 , Rs 500 like this so we are removing first three index of string  0 1 2 3
+			 *so Rs will be removed
+			 *After all we are storing it into amount variable etc .
+			 */
+			
+			String amount = ((JButton) ae.getSource()).getText().substring(3);
+
+			BankManagementSystem connection = new  BankManagementSystem();
+			
+			
+			try{
+			
+			
+			ResultSet resultSet = connection.statement.executeQuery("select * from bank where pinnumber = '"+pinnumber+"'");
+		      int balance = 0;
+			while(resultSet.next()) {
+							if(resultSet.getString("type").equals("deposite")) {
+								balance  += Integer.parseInt(resultSet.getString("amount"));
+							}else {
+								balance -= Integer.parseInt(resultSet.getString("amount"));
+							}
+						}
+			        
+			              if(ae.getSource() != back && balance < Integer.parseInt(amount) ) {
+								JOptionPane.showMessageDialog(null , " Insufficient Balance");
+								return;
+							}
+		
+						
+						Date date = new Date();
+							String query = "insert into bank values('"+pinnumber+"', '"+date+"', 'withdrawal', '"+amount+"')";
+							connection.statement.executeUpdate(query);
+							JOptionPane.showMessageDialog(null,"Rs " + amount + " debited sucessfully");
+							setVisible(false);
+							new Transaction(pinnumber).setVisible(true);
+						
+						
+						
+						}catch(Exception e) 
+						{
+					  System.out.println(e);
+					     }
+		}	
+	}
+	
+	
+	
+	
+	
+	BankManagementSystem connection = new BankManagementSystem(); 	
+//			pinNumber.isEmpty() && !cardNumber.isEmpty()
+			int cardNumberrs = Integer.parseInt(cardNumber);
+			int pinNumberrs =  Integer.parseInt(pinNumber);
+			
+			if( cardNumberrs < 0 && pinNumberrs < 0 ) {
+				cardnumber = "" + cardNumber;
+				pinnumber = "" + pinNumber;
+				try {
+				
+					String query = "select * from login where cardnumber = '"+ cardnumber+"' and pinnumber = '"+pinnumber+"' ";
+					ResultSet result1 = connection.statement.executeQuery(query);
+
+					if(result1.next()) {
+						setVisible(false);
+						new Transaction(pinnumber).setVisible(true);
+					}else {
+						JOptionPane.showMessageDialog(null, "Incorrect Card Number or Pin");
+					}
+					
+				}catch(Exception e) {
+					e.printStackTrace();
+				}
+			}else if(true) {
+				 cardnumber = cardTextField.getText();
+				 pinnumber = pinTextField.getText();
+            
+			}
+			
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	//			char[] pin = pinTextField.getPassword();
+//			String pin2 = new String(pin) ;
+//			System.out.println(pin2);
+//			
+//			int pin3 = Integer.parseInt(pin2);
+//			
+//			String pinnumber = "" + pin3;
